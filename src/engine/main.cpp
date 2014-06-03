@@ -1,6 +1,7 @@
 // main.cpp: initialisation & main loop
 
 #include "engine.h"
+#include "sdosscripts.h"
 #include <sched.h>
 
 extern void cleargamma();
@@ -1294,6 +1295,15 @@ int main(int argc, char **argv)
         writecfg(game::restoreconfig());
     }
     execfile(game::autoexec(), false);
+
+    /* SDoS-specific */
+    logoutf("init: sdos");
+    for (int i = 0; sdos_scripts[i] != 0; i++)
+    {
+        executestr(sdos_scripts[i]);
+    }
+    /* ------------- */
+
     initing = NOT_INITING;
 
     identflags &= ~IDF_PERSIST;
