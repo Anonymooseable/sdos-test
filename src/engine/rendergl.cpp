@@ -1,7 +1,6 @@
 // rendergl.cpp: core opengl rendering stuff
 
 #include "engine.h"
-#include "game.h"
 
 bool hasVBO = false, hasDRE = false, hasOQ = false, hasTR = false, hasFBO = false, hasDS = false, hasTF = false, hasBE = false, hasBC = false, hasCM = false, hasNP2 = false, hasTC = false, hasS3TC = false, hasFXT1 = false, hasTE = false, hasMT = false, hasD3 = false, hasAF = false, hasVP2 = false, hasVP3 = false, hasPP = false, hasMDA = false, hasTE3 = false, hasTE4 = false, hasVP = false, hasFP = false, hasGLSL = false, hasGM = false, hasNVFB = false, hasSGIDT = false, hasSGISH = false, hasDT = false, hasSH = false, hasNVPCF = false, hasRN = false, hasPBO = false, hasFBB = false, hasUBO = false, hasBUE = false, hasMBR = false, hasFC = false, hasTEX = false;
 int hasstencil = 0;
@@ -2384,28 +2383,6 @@ VAR(statrate, 1, 200, 1000);
 
 FVARP(conscale, 1e-3f, 0.33f, 1e3f);
 
-/* Game Clock */
-VARP(gameclock, 0, 1, 1);
-//VARP(gameclockcountup, 0, 0, 1);  // TODO: fix up-counting mode
-VARP(gameclocksize, 1, 5, 10);
-VARP(gameclockturnredonlowtime, 0, 1, 1);
-VARP(gameclockcolor_r, 0, 255, 255);
-VARP(gameclockcolor_g, 0, 255, 255);
-VARP(gameclockcolor_b, 0, 255, 255);
-VARP(gameclockcolor_a, 0, 255, 255);
-VARP(gameclockoffset_x, 0, 0, 1000);
-VARP(gameclockoffset_y, 0, 0, 1000);
-VARP(gameclockoffset_x_withradar, 0, 125, 1000);
-VARP(gameclockoffset_y_withradar, 0, 0, 1000);
-
-static void managegameclock()
-{
-    executestr("showgui gameclock_settings");
-}
-
-COMMAND(managegameclock, "");
-/* ---------- */
-
 void gl_drawhud()
 {
     int w = screenw, h = screenh;
@@ -2564,42 +2541,6 @@ void gl_drawhud()
                     DELETEA(gameinfo);
                 }
             } 
-
-            const int gamemode = game::gamemode;
-            if(gameclock && !m_edit)
-            {
-                static char buf[16];
-                const int millis = max(game::maplimit-lastmillis, 0);
-                int secs = millis/1000;
-                int mins = secs/60;
-                secs %= 60;
-                sprintf(buf, "%d:%02d", mins, secs);
-                
-                int r = gameclockcolor_r,
-                    g = gameclockcolor_g,
-                    b = gameclockcolor_b,
-                    a = gameclockcolor_a;
-                
-                if (mins < 1 && gameclockturnredonlowtime) {
-                    r = 255;
-                    g = 0;
-                    b = 0;
-                    a = 255;
-                }
-                
-                const float gameclockscale = 1 + gameclocksize/10.0;
-                const bool radar = (m_ctf || m_capture);
-                const float xoff = ((radar ? gameclockoffset_x_withradar : gameclockoffset_x)*conw/1000);
-                const float yoff = ((radar ? gameclockoffset_y_withradar : gameclockoffset_y)*conh/1000);
-                
-                glPushMatrix();
-                glScalef(gameclockscale, gameclockscale, 1);
-                draw_text(buf,
-                          (conw - 5*FONTH - xoff)/gameclockscale,
-                          (FONTH/2 + yoff)/gameclockscale,
-                          r, g, b, a);
-                glPopMatrix();
-            }
             
             glPopMatrix();
         }
