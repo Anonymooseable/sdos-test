@@ -307,7 +307,7 @@ engine/engine.h:	$(SAUER_DEPLIBS) shared/cube.h engine/world.h engine/octa.h eng
 engine/glare.o:		$(SAUER_DEPLIBS) engine/engine.h engine/rendertarget.h
 engine/grass.o:		$(SAUER_DEPLIBS) engine/engine.h
 engine/lightmap.o:	$(SAUER_DEPLIBS) engine/engine.h
-engine/main.o:		$(SAUER_DEPLIBS) engine/engine.h
+engine/main.o:		$(SAUER_DEPLIBS) engine/engine.h engine/sdosscripts.h
 engine/master.o:	$(SAUER_DEPLIBS) shared/cube.h
 engine/material.o:	$(SAUER_DEPLIBS) engine/engine.h
 engine/menus.o:		$(SAUER_DEPLIBS) engine/engine.h
