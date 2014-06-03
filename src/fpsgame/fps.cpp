@@ -841,7 +841,7 @@ namespace game
     /* Game Clock */
     VARP(gameclock, 0, 1, 1);
     //VARP(gameclockcountup, 0, 0, 1);  // TODO: fix the up-counting mode
-    VARP(gameclocksize, 1, 5, 20);
+    VARP(gameclocksize, 1, 5, 30);
     VARP(gameclockturnredonlowtime, 0, 1, 1);
     VARP(gameclockcolor_r, 0, 255, 255);
     VARP(gameclockcolor_g, 0, 255, 255);
