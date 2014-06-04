@@ -466,7 +466,7 @@ bool listdir(const char *dirname, bool rel, const char *ext, vector<char *> &fil
                 if(namelen > extsize) 
                 { 
                     namelen -= extsize;
-                    if(FindFileData.cFileName[namelen] == '.' && strncmp(FindFi
+                    if(FindFileData.cFileName[namelen] == '.' && strncmp(FindFileData.cFileName+namelen+1, ext, extsize-1)==0)
                         files.add(newstring(FindFileData.cFileName, namelen));
                 }
             }
