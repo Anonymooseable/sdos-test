@@ -182,7 +182,7 @@
 /* #undef SDL_FILE_DISABLED */
 #define SDL_JOYSTICK_DISABLED 1
 #define SDL_HAPTIC_DISABLED 1
-#define SDL_LOADSO_DISABLED 1
+/* #undef SDL_LOADSO_DISABLED */
 #define SDL_RENDER_DISABLED 1
 /* #undef SDL_THREADS_DISABLED */
 /* #undef SDL_TIMERS_DISABLED */
@@ -241,7 +241,7 @@
 /* #undef SDL_LOADSO_DLOPEN */
 /* #undef SDL_LOADSO_DUMMY */
 /* #undef SDL_LOADSO_LDG */
-/* #undef SDL_LOADSO_WINDOWS */
+#define SDL_LOADSO_WINDOWS 1
 
 /* Enable various threading systems */
 /* #undef SDL_THREAD_PTHREAD */
