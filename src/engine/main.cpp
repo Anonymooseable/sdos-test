@@ -11,9 +11,9 @@ void cleanup()
     holdscreenlock;
     recorder::stop();
     cleanupserver();
-    if(screen) SDL_SetWindowGrab(screen, SDL_FALSE);
-    SDL_SetRelativeMouseMode(SDL_FALSE);
     SDL_ShowCursor(SDL_TRUE);
+    SDL_SetRelativeMouseMode(SDL_FALSE);
+    if(screen) SDL_SetWindowGrab(screen, SDL_FALSE);
     cleargamma();
     freeocta(worldroot);
     extern void clear_command(); clear_command();
@@ -51,9 +51,9 @@ void fatal(const char *s, ...)    // failure exit
         {
             if(SDL_WasInit(SDL_INIT_VIDEO))
             {
-                if(screen) SDL_SetWindowGrab(screen, SDL_FALSE);
-                SDL_SetRelativeMouseMode(SDL_FALSE);
                 SDL_ShowCursor(SDL_TRUE);
+                SDL_SetRelativeMouseMode(SDL_FALSE);
+                if(screen) SDL_SetWindowGrab(screen, SDL_FALSE);
                 cleargamma();
             }
             #ifdef WIN32
@@ -507,8 +507,8 @@ void inputgrab(bool on)
         SDL_ShowCursor(SDL_TRUE);
         if(relativemouse)
         {
-            SDL_SetWindowGrab(screen, SDL_FALSE);
             SDL_SetRelativeMouseMode(SDL_FALSE);
+            SDL_SetWindowGrab(screen, SDL_FALSE);
             relativemouse = false;
         }
     }
