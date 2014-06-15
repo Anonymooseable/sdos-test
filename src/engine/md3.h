@@ -183,11 +183,11 @@ struct md3 : vertmodel, vertloader<md3>
         mdl.model = this;
         mdl.index = 0;
         defformatstring(name1)("packages/models/%s/tris.md3", loadname);
-        mdl.meshes = sharemeshes("%s", path(name1));
+        mdl.meshes = sharemeshes(path(name1));
         if(!mdl.meshes)
         {
             defformatstring(name2)("packages/models/%s/tris.md3", pname);    // try md3 in parent folder (vert sharing)
-            mdl.meshes = sharemeshes("%s", path(name2));
+            mdl.meshes = sharemeshes(path(name2));
             if(!mdl.meshes) return false;
         }
         Texture *tex, *masks;

@@ -535,7 +535,7 @@ struct animmodel : model
 
     virtual meshgroup *loadmeshes(const char *name, va_list args) { return NULL; }
 
-    meshgroup *sharemeshes(const char *name, ...) PRINTFARGS(2, 3)
+    meshgroup *sharemeshes(const char *name, ...)
     {
         static hashtable<const char *, meshgroup *> meshgroups;
         if(!meshgroups.access(name))
