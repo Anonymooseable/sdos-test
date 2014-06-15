@@ -1,7 +1,7 @@
 include deps/platform.mk
 
-CFLAGS+= -Ideps/$(PREFIX)/include/SDL2 -Ishared -Iengine -Ifpsgame -Wall -fsigned-char
-CXXFLAGS+= -Ideps/$(PREFIX)/include/SDL2 -Ishared -Iengine -Ifpsgame -std=c++11 -Wall -fsigned-char -fno-exceptions -fno-rtti
+override CFLAGS+= -Ideps/$(PREFIX)/include/SDL2 -Ishared -Iengine -Ifpsgame -Wall -fsigned-char
+override CXXFLAGS+= -Ideps/$(PREFIX)/include/SDL2 -Ishared -Iengine -Ifpsgame -std=gnu++0x -Wall -Wno-format-zero-length -fsigned-char -fno-exceptions -fno-rtti
 ifneq (,$(findstring -ggdb,$(CXXFLAGS)))
   STRIP=true
   UPX=true
@@ -90,7 +90,7 @@ LIBS+= -lenet -lSDL2 -lSDL2_image -ljpeg -lpng -lz -lSDL2_mixer -logg -lvorbis -
 endif
 
 
-quirks/oldglibc%: CXXFLAGS += -fno-fast-math
+quirks/oldglibc%: override CXXFLAGS += -fno-fast-math
 
 default: all
 
