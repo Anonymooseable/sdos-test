@@ -20,7 +20,7 @@ struct editline
         len = maxlen = 0;
     }
 
-    bool grow(int total, const char *fmt = "", ...) PRINTFARGS(3, 4)
+    bool grow(int total, const char *fmt = NULL, ...) PRINTFARGS(3, 4)
     {
         if(total + 1 <= maxlen) return false;
         maxlen = (total + CHUNKSIZE) - total%CHUNKSIZE;
@@ -31,7 +31,7 @@ struct editline
             va_start(args, fmt);
             vformatstring(newtext, fmt, args, maxlen);
             va_end(args);
-        }
+        } else newtext[0] = '\0';
         DELETEA(text);
         text = newtext;
         return true;
