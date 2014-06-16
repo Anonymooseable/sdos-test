@@ -104,7 +104,7 @@ client: $(CLIENT_OBJS)
 	$(WINDRES) -I vcpp -i vcpp/mingw.rc -J rc -o vcpp/mingw.res -O coff 
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o sauerbraten.exe vcpp/mingw.res $(CLIENT_OBJS) -Wl,--as-needed -Wl,--start-group $(LIBS) -Wl,--end-group
 	$(STRIP) sauerbraten.exe
-	$(UPX) sauerbraten.exe
+	-$(UPX) sauerbraten.exe
 endif
 
 ifdef MAC
@@ -116,7 +116,7 @@ $(MACOBJC):
 client:	$(CLIENT_OBJS) $(MACOBJCXX) $(MACOBJC)
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o sauer_client $(CLIENT_OBJS) $(MACOBJCXX) $(MACOBJC) $(LIBS)
 	$(STRIP) sauer_client
-	$(UPX) sauer_client
+	-$(UPX) sauer_client
 endif
 
 ifdef LINUX
@@ -128,7 +128,7 @@ ifneq (, $(findstring x86_64,$(PREFIX)))
 	./remove_symbol_version memcpy@GLIBC_2.2.5
 endif
 endif
-	$(UPX) sauer_client
+	-$(UPX) sauer_client
 endif
 
 # DO NOT DELETE
