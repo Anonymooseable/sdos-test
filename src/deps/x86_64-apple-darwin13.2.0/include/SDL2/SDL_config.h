@@ -52,6 +52,8 @@
 /* #undef HAVE_GCC_SYNC_LOCK_TEST_AND_SET */
 /* #undef HAVE_PTHREAD_SPINLOCK */
 
+/* #undef HAVE_DXGI_H */
+
 /* Comment this if you want to build without any C library requirements */
 #define HAVE_LIBC 1
 #if HAVE_LIBC
@@ -149,6 +151,9 @@
 #define HAVE_SIN 1
 #define HAVE_SINF 1
 #define HAVE_SQRT 1
+#define HAVE_SQRTF 1
+#define HAVE_TAN 1
+#define HAVE_TANF 1
 #define HAVE_FSEEKO 1
 /* #undef HAVE_FSEEKO64 */
 #define HAVE_SIGACTION 1
@@ -202,10 +207,12 @@
 #define SDL_AUDIO_DRIVER_COREAUDIO 1
 /* #undef SDL_AUDIO_DRIVER_DISK */
 /* #undef SDL_AUDIO_DRIVER_DUMMY */
+/* #undef SDL_AUDIO_DRIVER_ANDROID */
 /* #undef SDL_AUDIO_DRIVER_XAUDIO2 */
 /* #undef SDL_AUDIO_DRIVER_DSOUND */
 /* #undef SDL_AUDIO_DRIVER_ESD */
 /* #undef SDL_AUDIO_DRIVER_ESD_DYNAMIC */
+/* #undef SDL_AUDIO_DRIVER_NACL */
 /* #undef SDL_AUDIO_DRIVER_NAS */
 /* #undef SDL_AUDIO_DRIVER_NAS_DYNAMIC */
 /* #undef SDL_AUDIO_DRIVER_SNDIO */
@@ -228,6 +235,7 @@
 /* #undef SDL_JOYSTICK_DUMMY */
 /* #undef SDL_JOYSTICK_IOKIT */
 /* #undef SDL_JOYSTICK_LINUX */
+/* #undef SDL_JOYSTICK_ANDROID */
 /* #undef SDL_JOYSTICK_WINMM */
 /* #undef SDL_JOYSTICK_USBHID */
 /* #undef SDL_JOYSTICK_USBHID_MACHINE_JOYSTICK_H */
@@ -273,6 +281,7 @@
 /* #undef SDL_VIDEO_DRIVER_MIR_DYNAMIC_XKBCOMMON */
 /* #undef SDL_VIDEO_DRIVER_X11 */
 /* #undef SDL_VIDEO_DRIVER_RPI */
+/* #undef SDL_VIDEO_DRIVER_ANDROID */
 /* #undef SDL_VIDEO_DRIVER_X11_DYNAMIC */
 /* #undef SDL_VIDEO_DRIVER_X11_DYNAMIC_XEXT */
 /* #undef SDL_VIDEO_DRIVER_X11_DYNAMIC_XCURSOR */
@@ -293,6 +302,7 @@
 /* #undef SDL_VIDEO_DRIVER_X11_CONST_PARAM_XDATA32 */
 /* #undef SDL_VIDEO_DRIVER_X11_CONST_PARAM_XEXTADDDISPLAY */
 /* #undef SDL_VIDEO_DRIVER_X11_HAS_XKBKEYCODETOKEYSYM */
+/* #undef SDL_VIDEO_DRIVER_NACL */
 
 /* #undef SDL_VIDEO_RENDER_D3D */
 /* #undef SDL_VIDEO_RENDER_D3D11 */
@@ -318,6 +328,7 @@
 /* #undef SDL_POWER_WINDOWS */
 /* #undef SDL_POWER_MACOSX */
 /* #undef SDL_POWER_HAIKU */
+/* #undef SDL_POWER_ANDROID */
 /* #undef SDL_POWER_HARDWIRED */
 
 /* Enable system filesystem support */
@@ -326,6 +337,7 @@
 /* #undef SDL_FILESYSTEM_DUMMY */
 /* #undef SDL_FILESYSTEM_UNIX */
 /* #undef SDL_FILESYSTEM_WINDOWS */
+/* #undef SDL_FILESYSTEM_NACL */
 
 /* Enable assembly routines */
 #define SDL_ASSEMBLY_ROUTINES 1
