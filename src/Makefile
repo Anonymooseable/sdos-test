@@ -114,9 +114,9 @@ $(MACOBJC):
 	$(CC) -c $(CFLAGS) -o $@ $(subst .o,.m,$@)
 
 client:	$(CLIENT_OBJS) $(MACOBJCXX) $(MACOBJC)
-	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o sauer_client $(CLIENT_OBJS) $(MACOBJCXX) $(MACOBJC) $(LIBS)
-	$(STRIP) sauer_client
-	-$(UPX) sauer_client
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o sauerbraten $(CLIENT_OBJS) $(MACOBJCXX) $(MACOBJC) $(LIBS)
+	$(STRIP) sauerbraten
+	-$(UPX) sauerbraten
 endif
 
 ifdef LINUX
