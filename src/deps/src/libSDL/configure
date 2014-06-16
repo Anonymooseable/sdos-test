@@ -16639,7 +16639,7 @@ if test "x$ac_cv_lib_m_pow" = xyes; then :
   LIBS="$LIBS -lm"; EXTRA_LDFLAGS="$EXTRA_LDFLAGS -lm"
 fi
 
-    for ac_func in atan atan2 acos asin ceil copysign cos cosf fabs floor log pow scalbn sin sinf sqrt
+    for ac_func in atan atan2 acos asin ceil copysign cos cosf fabs floor log pow scalbn sin sinf sqrt sqrtf tan tanf
 do :
   as_ac_var=`$as_echo "ac_cv_func_$ac_func" | $as_tr_sh`
 ac_fn_c_check_func "$LINENO" "$ac_func" "$as_ac_var"
@@ -18688,9 +18688,9 @@ CheckWayland()
 if test "${enable_video_wayland+set}" = set; then :
   enableval=$enable_video_wayland;
 else
-  enable_video_wayland=no
+  enable_video_wayland=yes
 fi
- #yes)
+
 
     # Check whether --enable-video-wayland-qt-touch was given.
 if test "${enable_video_wayland_qt_touch+set}" = set; then :
@@ -18745,7 +18745,9 @@ fi
         { $as_echo "$as_me:${as_lineno-$LINENO}: checking for Wayland support" >&5
 $as_echo_n "checking for Wayland support... " >&6; }
         video_wayland=no
-        if test x$PKG_CONFIG != xno; then
+        if  test x$PKG_CONFIG != xno && \
+            test x$video_opengl_egl = xyes && \
+            test x$video_opengles_v2 = xyes; then
             if $PKG_CONFIG --exists wayland-client wayland-egl wayland-cursor egl xkbcommon ; then
                 WAYLAND_CFLAGS=`$PKG_CONFIG --cflags wayland-client wayland-egl wayland-cursor xkbcommon`
                 WAYLAND_LIBS=`$PKG_CONFIG --libs wayland-client wayland-egl wayland-cursor xkbcommon`
@@ -18842,9 +18844,9 @@ CheckMir()
 if test "${enable_video_mir+set}" = set; then :
   enableval=$enable_video_mir;
 else
-  enable_video_mir=no
+  enable_video_mir=yes
 fi
- #yes)
+
 
     if test x$enable_video = xyes -a x$enable_video_mir = xyes; then
         # Extract the first word of "pkg-config", so it can be a program name with args.
@@ -18895,7 +18897,31 @@ $as_echo_n "checking for Mir support... " >&6; }
             if $PKG_CONFIG --exists mirclient egl xkbcommon ; then
                 MIR_CFLAGS=`$PKG_CONFIG --cflags mirclient egl xkbcommon`
                 MIR_LIBS=`$PKG_CONFIG --libs mirclient egl xkbcommon`
+                save_CFLAGS="$CFLAGS"
+                CFLAGS="$save_CFLAGS $MIR_CFLAGS"
+
+                                cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+                #include <mir_toolkit/mir_client_library.h>
+
+int
+main ()
+{
+
+                    MirMotionToolType tool = mir_motion_tool_type_mouse;
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"; then :
+
                 video_mir=yes
+
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+                CFLAGS="$save_CFLAGS"
             fi
         fi
         { $as_echo "$as_me:${as_lineno-$LINENO}: result: $video_mir" >&5
@@ -18956,6 +18982,55 @@ _ACEOF
             have_video=yes
         fi
     fi
+}
+
+CheckNativeClient()
+{
+        cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+          #if !defined(__native_client__)
+          #error "NO NACL"
+          #endif
+
+int
+main ()
+{
+
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"; then :
+
+        $as_echo "#define SDL_VIDEO_DRIVER_NACL 1" >>confdefs.h
+
+        $as_echo "#define SDL_AUDIO_DRIVER_NACL 1" >>confdefs.h
+
+
+$as_echo "#define HAVE_POW 1" >>confdefs.h
+
+
+$as_echo "#define HAVE_OPENGLES2 1" >>confdefs.h
+
+
+$as_echo "#define SDL_VIDEO_OPENGL_ES2 1" >>confdefs.h
+
+
+$as_echo "#define SDL_VIDEO_RENDER_OGL_ES2 1" >>confdefs.h
+
+
+        SDL_LIBS="-lppapi_simple -lppapi_gles2 $SDL_LIBS"
+
+        SDLMAIN_SOURCES="$srcdir/src/main/nacl/*.c"
+        SOURCES="$SOURCES $srcdir/src/audio/nacl/*.c"
+        SUMMARY_audio="${SUMMARY_audio} nacl"
+        SOURCES="$SOURCES $srcdir/src/video/nacl/*.c"
+        SUMMARY_video="${SUMMARY_video} nacl opengles2"
+
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
 }
 
 
@@ -20726,6 +20801,7 @@ _ACEOF
             fi
             { $as_echo "$as_me:${as_lineno-$LINENO}: result: $directfb_shared" >&5
 $as_echo "$directfb_shared" >&6; }
+            SDL_CFLAGS="$SDL_CFLAGS $DIRECTFB_CFLAGS"
             have_video=yes
         fi
     fi
@@ -21154,12 +21230,6 @@ $as_echo "#define SDL_VIDEO_OPENGL_CGL 1" >>confdefs.h
 $as_echo "#define SDL_VIDEO_RENDER_OGL 1" >>confdefs.h
 
         SUMMARY_video="${SUMMARY_video} opengl"
-        case "$host" in
-            *-*-darwin*)
-                if test x$enable_video_cocoa = xyes; then
-                    EXTRA_LDFLAGS="$EXTRA_LDFLAGS -Wl,-framework,OpenGL"
-                fi
-        esac
     fi
 }
 
@@ -21403,6 +21473,10 @@ else
 fi
 
     case "$host" in
+	 *-*-androideabi*)
+            pthread_cflags="-D_REENTRANT -D_THREAD_SAFE"
+            pthread_lib=""
+	    ;;
         *-*-linux*|*-*-uclinux*)
             pthread_cflags="-D_REENTRANT"
             pthread_lib="-lpthread"
@@ -21907,6 +21981,12 @@ fi
         ac_fn_c_check_header_mongrel "$LINENO" "xaudio2.h" "ac_cv_header_xaudio2_h" "$ac_includes_default"
 if test "x$ac_cv_header_xaudio2_h" = xyes; then :
   have_xaudio2=yes
+fi
+
+
+        ac_fn_c_check_header_mongrel "$LINENO" "dxgi.h" "ac_cv_header_dxgi_h" "$ac_includes_default"
+if test "x$ac_cv_header_dxgi_h" = xyes; then :
+  have_dxgi=yes
 fi
 
 
@@ -22547,6 +22627,21 @@ case "$host" in
                     $as_echo "#define SDL_VIDEO_DRIVER_RPI 1" >>confdefs.h
                 fi
                 ;;
+            *-*-androideabi*)
+                # Android
+                ARCH=android
+                ANDROID_CFLAGS="-DGL_GLEXT_PROTOTYPES"
+                CFLAGS="$CFLAGS $ANDROID_CFLAGS"
+                SDL_CFLAGS="$SDL_CFLAGS $ANDROID_CFLAGS"
+                EXTRA_CFLAGS="$EXTRA_CFLAGS $ANDROID_CFLAGS"
+                EXTRA_LDFLAGS="$EXTRA_LDFLAGS -ldl -lGLESv1_CM -lGLESv2 -llog -landroid"
+
+                if test x$enable_video = xyes; then
+                    SOURCES="$SOURCES $srcdir/src/core/android/*.c $srcdir/src/video/android/*.c"
+                    $as_echo "#define SDL_VIDEO_DRIVER_ANDROID 1" >>confdefs.h
+                    SUMMARY_video="${SUMMARY_video} android"
+                fi
+                ;;
             *-*-linux*)         ARCH=linux ;;
             *-*-uclinux*)       ARCH=linux ;;
             *-*-kfreebsd*-gnu)  ARCH=kfreebsd-gnu ;;
@@ -22577,12 +22672,12 @@ case "$host" in
         CheckNAS
         CheckSNDIO
         CheckX11
-        CheckWayland
-        CheckMir
         CheckDirectFB
         CheckFusionSound
         CheckOpenGLX11
         CheckOpenGLESX11
+        CheckMir
+        CheckWayland
         CheckLibUDev
         CheckDBus
         CheckInputEvents
@@ -22617,6 +22712,14 @@ $as_echo "#define SDL_AUDIO_DRIVER_PAUDIO 1" >>confdefs.h
                 SOURCES="$SOURCES $srcdir/src/audio/paudio/*.c"
                 have_audio=yes
             ;;
+            android)
+
+$as_echo "#define SDL_AUDIO_DRIVER_ANDROID 1" >>confdefs.h
+
+                SOURCES="$SOURCES $srcdir/src/audio/android/*.c"
+                SUMMARY_audio="${SUMMARY_audio} android"
+                have_audio=yes
+            ;;
           esac
         fi
         # Set up files for the joystick library
@@ -22627,6 +22730,13 @@ $as_echo "#define SDL_AUDIO_DRIVER_PAUDIO 1" >>confdefs.h
 $as_echo "#define SDL_JOYSTICK_LINUX 1" >>confdefs.h
 
                 SOURCES="$SOURCES $srcdir/src/joystick/linux/*.c"
+                have_joystick=yes
+            ;;
+            android)
+
+$as_echo "#define SDL_JOYSTICK_ANDROID 1" >>confdefs.h
+
+                SOURCES="$SOURCES $srcdir/src/joystick/android/*.c"
                 have_joystick=yes
             ;;
           esac
@@ -22653,6 +22763,13 @@ $as_echo "#define SDL_HAPTIC_LINUX 1" >>confdefs.h
 $as_echo "#define SDL_POWER_LINUX 1" >>confdefs.h
 
                    SOURCES="$SOURCES $srcdir/src/power/linux/*.c"
+                   have_power=yes
+               ;;
+               android)
+
+$as_echo "#define SDL_POWER_ANDROID 1" >>confdefs.h
+
+                   SOURCES="$SOURCES $srcdir/src/power/android/*.c"
                    have_power=yes
                ;;
              esac
@@ -22728,6 +22845,11 @@ $as_echo "#define SDL_VIDEO_RENDER_D3D 1" >>confdefs.h
 $as_echo "#define SDL_VIDEO_RENDER_D3D11 1" >>confdefs.h
 
             fi
+        fi
+        if test x$have_dxgi = xyes; then
+
+$as_echo "#define HAVE_DXGI_H 1" >>confdefs.h
+
         fi
         # Set up files for the audio library
         if test x$enable_audio = xyes; then
@@ -22954,6 +23076,7 @@ $as_echo "#define SDL_FILESYSTEM_HAIKU 1" >>confdefs.h
         # Set up files for the audio library
         if test x$enable_audio = xyes; then
             SOURCES="$SOURCES $srcdir/src/audio/coreaudio/*.c"
+            SUMMARY_audio="${SUMMARY_audio} coreaudio"
             have_audio=yes
         fi
         # Set up files for the joystick library
@@ -23025,6 +23148,7 @@ $as_echo "#define SDL_FILESYSTEM_HAIKU 1" >>confdefs.h
 $as_echo "#define SDL_AUDIO_DRIVER_COREAUDIO 1" >>confdefs.h
 
             SOURCES="$SOURCES $srcdir/src/audio/coreaudio/*.c"
+            SUMMARY_audio="${SUMMARY_audio} coreaudio"
             have_audio=yes
         fi
         # Set up files for the joystick library
@@ -23082,6 +23206,31 @@ $as_echo "#define SDL_TIMER_UNIX 1" >>confdefs.h
         if test x$enable_audio = xyes; then
             EXTRA_LDFLAGS="$EXTRA_LDFLAGS -Wl,-framework,CoreAudio -Wl,-framework,AudioToolbox -Wl,-framework,AudioUnit"
         fi
+        ;;
+    *-nacl|*-pnacl)
+        ARCH=nacl
+        CheckNativeClient
+        CheckDummyAudio
+        CheckDummyVideo
+        CheckInputEvents
+        CheckPTHREAD
+
+        # Set up files for the timer library
+        if test x$enable_timers = xyes; then
+            $as_echo "#define SDL_TIMER_UNIX 1" >>confdefs.h
+
+            SOURCES="$SOURCES $srcdir/src/timer/unix/*.c"
+            have_timers=yes
+        fi
+
+        if test x$enable_filesystem = xyes; then
+
+$as_echo "#define SDL_FILESYSTEM_NACL 1" >>confdefs.h
+
+            SOURCES="$SOURCES $srcdir/src/filesystem/nacl/*.c"
+            have_filesystem=yes
+        fi
+
         ;;
     *)
         as_fn_error $? "
@@ -23153,7 +23302,7 @@ for EXT in asm cc m c S; do
     OBJECTS=`echo "$OBJECTS" | sed 's,[^ ]*/\([^ ]*\)\.'$EXT',$(objects)/\1.lo,g'`
     DEPENDS=`echo "$DEPENDS" | sed "s,^\\([^ ]*\\)/\\([^ ]*\\)\\.$EXT\\$,\\\\
 \\$(objects)/\\2.lo: \\1/\\2.$EXT\\\\
-	\\$(LIBTOOL) --mode=compile \\$(CC) \\$(CFLAGS) \\$(EXTRA_CFLAGS) $DEPENDENCY_TRACKING_OPTIONS -c \\$< -o \\$@,g"`
+	\\$(LIBTOOL) --tag=CC --mode=compile \\$(CC) \\$(CFLAGS) \\$(EXTRA_CFLAGS) $DEPENDENCY_TRACKING_OPTIONS -c \\$< -o \\$@,g"`
 done
 
 VERSION_OBJECTS=`echo $VERSION_SOURCES`
@@ -23168,14 +23317,14 @@ SDLMAIN_DEPENDS=`echo $SDLMAIN_SOURCES`
 SDLMAIN_OBJECTS=`echo "$SDLMAIN_OBJECTS" | sed 's,[^ ]*/\([^ ]*\)\.c,$(objects)/\1.o,g'`
 SDLMAIN_DEPENDS=`echo "$SDLMAIN_DEPENDS" | sed "s,\\([^ ]*\\)/\\([^ ]*\\)\\.c,\\\\
 \\$(objects)/\\2.o: \\1/\\2.c\\\\
-	\\$(LIBTOOL) --mode=compile \\$(CC) \\$(CFLAGS) \\$(EXTRA_CFLAGS) $DEPENDENCY_TRACKING_OPTIONS -c \\$< -o \\$@,g"`
+	\\$(LIBTOOL) --tag=CC --mode=compile \\$(CC) \\$(CFLAGS) \\$(EXTRA_CFLAGS) $DEPENDENCY_TRACKING_OPTIONS -c \\$< -o \\$@,g"`
 
 SDLTEST_OBJECTS=`echo $SDLTEST_SOURCES`
 SDLTEST_DEPENDS=`echo $SDLTEST_SOURCES`
 SDLTEST_OBJECTS=`echo "$SDLTEST_OBJECTS" | sed 's,[^ ]*/\([^ ]*\)\.c,$(objects)/\1.o,g'`
 SDLTEST_DEPENDS=`echo "$SDLTEST_DEPENDS" | sed "s,\\([^ ]*\\)/\\([^ ]*\\)\\.c,\\\\
 \\$(objects)/\\2.o: \\1/\\2.c\\\\
-	\\$(LIBTOOL) --mode=compile \\$(CC) \\$(CFLAGS) \\$(EXTRA_CFLAGS) $DEPENDENCY_TRACKING_OPTIONS -c \\$< -o \\$@,g"`
+	\\$(LIBTOOL) --tag=CC --mode=compile \\$(CC) \\$(CFLAGS) \\$(EXTRA_CFLAGS) $DEPENDENCY_TRACKING_OPTIONS -c \\$< -o \\$@,g"`
 
 # Set runtime shared library paths as needed
 
