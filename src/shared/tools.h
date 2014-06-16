@@ -32,10 +32,7 @@ typedef unsigned long long int ullong;
 #define UNUSED
 #endif
 
-inline void *operator new(size_t, void *p) throw() { return p; }
-inline void *operator new[](size_t, void *p) throw() { return p; }
-inline void operator delete(void *, void *) throw() {}
-inline void operator delete[](void *, void *) throw() {}
+#include <new>
 
 #define stringify_(x)		#x
 #define stringify_macro(x)	stringify_(x)
