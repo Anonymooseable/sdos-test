@@ -38,10 +38,15 @@ endif
 
 export CC
 export CXX
-export CPPFLAGS:= $(ARCHFLAGS) $(OPTFLAGS)
-export CFLAGS:= $(ARCHFLAGS) $(OPTFLAGS)
-export LDFLAGS:= $(ARCHFLAGS) $(OPTFLAGS) -L$(DEPSDIR)/$(PREFIX)/lib
-export CXXFLAGS:= $(ARCHFLAGS) $(OPTFLAGS) -fvisibility-inlines-hidden
+override CPPFLAGS+= $(ARCHFLAGS) $(OPTFLAGS)
+export CPPFLAGS
+override CFLAGS+= $(ARCHFLAGS) $(OPTFLAGS)
+export CFLAGS
+override LDFLAGS+= $(ARCHFLAGS) $(OPTFLAGS) -L$(DEPSDIR)/$(PREFIX)/lib
+export LDFLAGS
+override CXXFLAGS+= $(ARCHFLAGS) $(OPTFLAGS) -fvisibility-inlines-hidden
+export CXXFLAGS
 export PKG_CONFIG_LIBDIR:= $(DEPSDIR)/$(PREFIX)/lib/pkgconfig
-export PATH:= $(DEPSDIR)/$(PREFIX)/bin:$(PATH)
+override PATH:= $(DEPSDIR)/$(PREFIX)/bin:$(PATH)
+export PATH
 
