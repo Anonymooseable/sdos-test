@@ -1,7 +1,7 @@
 include deps/platform.mk
 
 override CFLAGS+= -Ideps/$(PREFIX)/include/SDL2 -Ishared -Iengine -Ifpsgame -Wall -fsigned-char
-override CXXFLAGS+= -Ideps/$(PREFIX)/include/SDL2 -Ishared -Iengine -Ifpsgame -std=gnu++0x -Wall -Wno-format-zero-length -fsigned-char -fno-exceptions -fno-rtti
+override CXXFLAGS+= -Ideps/$(PREFIX)/include/SDL2 -Ishared -Iengine -Ifpsgame -std=gnu++0x -Wall -fsigned-char -fno-exceptions -fno-rtti
 ifneq (,$(findstring -ggdb,$(CXXFLAGS)))
   STRIP=true
   UPX=true
