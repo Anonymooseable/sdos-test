@@ -101,6 +101,7 @@ VARF(fsaa, -1, -1, 16, initwarning("anti-aliasing"));
 extern void updatevsync();
 VARF(vsync, 0, 0, 1, updatevsync());
 XIDENT(IDF_SWLACC, VARFP, vsynctear, 0, 0, 1, if(vsync) updatevsync());
+XIDENT(IDF_SWLACC, VARFP, fullscreendesktop, 0, 1, 1, initwarning("desktop mode fullscreen"));
 
 void writeinitcfg()
 {
@@ -614,7 +615,7 @@ void setupscreen(int &useddepthbits, int &usedfsaa)
     {
         winw = desktopw;
         winh = desktoph;
-        flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
+        flags |= fullscreendesktop ? SDL_WINDOW_FULLSCREEN_DESKTOP : SDL_WINDOW_FULLSCREEN;
         initwindowpos = true;
     }
 
