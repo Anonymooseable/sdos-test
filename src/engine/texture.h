@@ -343,21 +343,21 @@ struct Shader
 
     void setvariant(int col, int row, Shader *fallbackshader)
     {
-        if(!this || !detailshader || renderpath==R_FIXEDFUNCTION) return;
+        if(!detailshader || renderpath==R_FIXEDFUNCTION) return;
         setvariant_(col, row, fallbackshader);
         lastshader->flushenvparams();
     }
 
     void setvariant(int col, int row)
     {
-        if(!this || !detailshader || renderpath==R_FIXEDFUNCTION) return;
+        if(!detailshader || renderpath==R_FIXEDFUNCTION) return;
         setvariant_(col, row, detailshader);
         lastshader->flushenvparams();
     }
 
     void setvariant(int col, int row, Slot &slot, VSlot &vslot, Shader *fallbackshader)
     {
-        if(!this || !detailshader || renderpath==R_FIXEDFUNCTION) return;
+        if(!detailshader || renderpath==R_FIXEDFUNCTION) return;
         setvariant_(col, row, fallbackshader);
         lastshader->flushenvparams(&slot);
         lastshader->setslotparams(slot, vslot);
@@ -365,7 +365,7 @@ struct Shader
 
     void setvariant(int col, int row, Slot &slot, VSlot &vslot)
     {
-        if(!this || !detailshader || renderpath==R_FIXEDFUNCTION) return;
+        if(!detailshader || renderpath==R_FIXEDFUNCTION) return;
         setvariant_(col, row, detailshader);
         lastshader->flushenvparams(&slot);
         lastshader->setslotparams(slot, vslot);
@@ -378,14 +378,14 @@ struct Shader
  
     void set()
     {
-        if(!this || !detailshader || renderpath==R_FIXEDFUNCTION) return;
+        if(!detailshader || renderpath==R_FIXEDFUNCTION) return;
         set_();
         lastshader->flushenvparams();
     }
 
     void set(Slot &slot, VSlot &vslot)
     {
-        if(!this || !detailshader || renderpath==R_FIXEDFUNCTION) return;
+        if(!detailshader || renderpath==R_FIXEDFUNCTION) return;
         set_();
         lastshader->flushenvparams(&slot);
         lastshader->setslotparams(slot, vslot);
