@@ -25,18 +25,70 @@ find_package(OpenGL REQUIRED)
 find_package(ZLIB REQUIRED)
 #include_directories(${ZLIB_INCLUDE_DIRS})
 
-
-
 add_subdirectory(deps/src/libenet)
 include_directories(${ENET_INCLUDE_DIR})
-add_subdirectory(shared)
-include_directories(shared)
-add_subdirectory(engine)
 
-file(GLOB_RECURSE fpsgame_SOURCES fpsgame/*.cpp fpsgame/*.h)
+include_directories(shared)
+
+list(APPEND Sauerbraten_SOURCES
+    shared/crypto.cpp
+    shared/geom.cpp
+    shared/stream.cpp
+    shared/tools.cpp
+    shared/zip.cpp
+    engine/3dgui.cpp
+    engine/bih.cpp
+    engine/blend.cpp
+    engine/blob.cpp
+    engine/client.cpp
+    engine/command.cpp
+    engine/console.cpp
+    engine/cubeloader.cpp
+    engine/decal.cpp
+    engine/dynlight.cpp
+    engine/glare.cpp
+    engine/grass.cpp
+    engine/lightmap.cpp
+    engine/main.cpp
+    engine/material.cpp
+    engine/menus.cpp
+    engine/movie.cpp
+    engine/normal.cpp
+    engine/octa.cpp
+    engine/octaedit.cpp
+    engine/octarender.cpp
+    engine/physics.cpp
+    engine/pvs.cpp
+    engine/rendergl.cpp
+    engine/rendermodel.cpp
+    engine/renderparticles.cpp
+    engine/rendersky.cpp
+    engine/rendertext.cpp
+    engine/renderva.cpp
+    engine/server.cpp
+    engine/serverbrowser.cpp
+    engine/shader.cpp
+    engine/shadowmap.cpp
+    engine/sound.cpp
+    engine/texture.cpp
+    engine/water.cpp
+    engine/world.cpp
+    engine/worldio.cpp
+    fpsgame/ai.cpp
+    fpsgame/client.cpp
+    fpsgame/entities.cpp
+    fpsgame/fps.cpp
+    fpsgame/monster.cpp
+    fpsgame/movable.cpp
+    fpsgame/render.cpp
+    fpsgame/scoreboard.cpp
+    fpsgame/server.cpp
+    fpsgame/waypoint.cpp
+    fpsgame/weapon.cpp
+)
 if(APPLE)
-    list(APPEND fpsgame_SOURCES ../xcode/main.m ../xcode/Launcher.m)
-    set_source_files_properties(../xcode/main.m ../xcode/Launcher.m PROPERTIES LANGUAGE C)
+    list(APPEND Sauerbraten_SOURCES xcode/main.m xcode/Launcher.m xcode/macutils.mm)
+    set_source_files_properties(xcode/main.m xcode/Launcher.m PROPERTIES LANGUAGE C)
 endif(APPLE)
-add_executable(Sauerbraten ${fpsgame_SOURCES})
-target_link_libraries(Sauerbraten engine shared enet ${SDL2_LIBRARY} ${SDLMIXER_LIBRARY} ${SDL2_IMAGE_LIBRARIES} ${OPENGL_gl_LIBRARY} ${ZLIB_LIBRARIES})
+add_executable(Sauerbraten ${Sauerbraten_SOURCES})
+target_link_libraries(Sauerbraten enet ${SDL2_LIBRARY} ${SDLMIXER_LIBRARY} ${SDL2_IMAGE_LIBRARIES} ${OPENGL_gl_LIBRARY} ${ZLIB_LIBRARIES})
