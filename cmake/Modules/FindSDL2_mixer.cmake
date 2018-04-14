@@ -22,6 +22,7 @@ ELSE(SDL2_Mixer_INCLUDE_DIRS)
   ) 
   SET(TRIAL_INCLUDE_PATHS
     $ENV{SDL2_MIXER_HOME}/include/SDL2
+    $ENV{SDL2_PATH}
     /usr/include/SDL2
     /usr/local/include/SDL2
     /sw/include/SDL2
